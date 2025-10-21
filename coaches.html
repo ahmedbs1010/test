@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tokyo 2020 - Coaches</title>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/app.js"></script>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar" aria-label="Navigation">
+        <div class="sidebar__brand">
+          <span class="brand__logo" aria-hidden="true"></span>
+          <span class="brand__name">Tokyo 2020</span>
+          <span class="brand__rings" aria-hidden="true">
+            <span class="ring" style="color: var(--ring-blue)"></span>
+            <span class="ring" style="color: var(--ring-yellow)"></span>
+            <span class="ring" style="color: var(--ring-black)"></span>
+            <span class="ring" style="color: var(--ring-green)"></span>
+            <span class="ring" style="color: var(--ring-red)"></span>
+          </span>
+        </div>
+        <nav class="sidebar__nav">
+          <a class="nav__item" href="index.html" data-nav="overview"><span class="label">Aperçu</span></a>
+          <a class="nav__item is-active" href="coaches.html" data-nav="coaches"><span class="label">Coaches</span></a>
+          <a class="nav__item" href="athletes.html" data-nav="athletes"><span class="label">Athlètes</span></a>
+          <a class="nav__item" href="medailles.html" data-nav="medailles"><span class="label">Médailles</span></a>
+          <a class="nav__item" href="historiques.html" data-nav="historiques"><span class="label">Historiques</span></a>
+        </nav>
+      </aside>
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar__left">
+            <button id="sidebarToggle" class="icon-btn" aria-label="Basculer le menu">≡</button>
+            <h1 class="page-title">Coaches</h1>
+          </div>
+          <div class="topbar__right">
+            <button id="themeToggle" class="icon-btn" aria-pressed="false">☼</button>
+          </div>
+        </header>
+
+        <section class="content">
+          <div class="card">
+            <div class="card__header">
+              <h3>Liste des coaches</h3>
+              <div class="filters">
+                <div class="field field--grow">
+                  <label for="coachSearch">Recherche</label>
+                  <input id="coachSearch" type="text" class="input" placeholder="Nom, sport, nation..." />
+                </div>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table class="table" id="coachesTable">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Sport</th>
+                    <th>Nation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Hiro Tanaka</td>
+                    <td>Judo</td>
+                    <td>JPN</td>
+                  </tr>
+                  <tr>
+                    <td>Claire Moreau</td>
+                    <td>Athlétisme</td>
+                    <td>FRA</td>
+                  </tr>
+                  <tr>
+                    <td>Mike Johnson</td>
+                    <td>Basketball</td>
+                    <td>USA</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

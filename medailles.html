@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tokyo 2020 - Médailles</title>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script defer src="assets/js/app.js"></script>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar" aria-label="Navigation">
+        <div class="sidebar__brand">
+          <span class="brand__name">Tokyo 2020</span>
+          <span class="brand__rings" aria-hidden="true">
+            <span class="ring" style="color: var(--ring-blue)"></span>
+            <span class="ring" style="color: var(--ring-yellow)"></span>
+            <span class="ring" style="color: var(--ring-black)"></span>
+            <span class="ring" style="color: var(--ring-green)"></span>
+            <span class="ring" style="color: var(--ring-red)"></span>
+          </span>
+        </div>
+        <nav class="sidebar__nav">
+          <a class="nav__item" href="index.html" data-nav="overview"><span class="label">Aperçu</span></a>
+          <a class="nav__item" href="coaches.html" data-nav="coaches"><span class="label">Coaches</span></a>
+          <a class="nav__item" href="athletes.html" data-nav="athletes"><span class="label">Athlètes</span></a>
+          <a class="nav__item is-active" href="medailles.html" data-nav="medailles"><span class="label">Médailles</span></a>
+          <a class="nav__item" href="historiques.html" data-nav="historiques"><span class="label">Historiques</span></a>
+        </nav>
+      </aside>
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar__left">
+            <button id="sidebarToggle" class="icon-btn" aria-label="Basculer le menu">≡</button>
+            <h1 class="page-title">Médailles</h1>
+          </div>
+          <div class="topbar__right">
+            <button id="themeToggle" class="icon-btn" aria-pressed="false">☼</button>
+          </div>
+        </header>
+
+        <section class="content">
+          <div class="grid-2">
+            <article class="card chart-card">
+              <div class="card__header">
+                <h3>Tableau des médailles</h3>
+                <div class="chip">Top pays</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="medalBarChart" aria-label="Bar chart médailles" role="img"></canvas>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card__header">
+                <h3>Répartition Or/Argent/Bronze</h3>
+                <div class="chip chip--muted">Aujourd'hui</div>
+              </div>
+              <div class="chart-container chart-container--sm">
+                <canvas id="medalPieChart"></canvas>
+              </div>
+            </article>
+          </div>
+
+          <article class="card">
+            <div class="card__header">
+              <h3>Classement détaillé</h3>
+            </div>
+            <div class="table-wrapper">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Pays</th>
+                    <th>Or</th>
+                    <th>Argent</th>
+                    <th>Bronze</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>JPN</td>
+                    <td><span class="badge badge--gold">27</span></td>
+                    <td><span class="badge badge--silver">14</span></td>
+                    <td><span class="badge badge--bronze">17</span></td>
+                    <td>58</td>
+                  </tr>
+                  <tr>
+                    <td>USA</td>
+                    <td><span class="badge badge--gold">39</span></td>
+                    <td><span class="badge badge--silver">41</span></td>
+                    <td><span class="badge badge--bronze">33</span></td>
+                    <td>113</td>
+                  </tr>
+                  <tr>
+                    <td>CHN</td>
+                    <td><span class="badge badge--gold">38</span></td>
+                    <td><span class="badge badge--silver">32</span></td>
+                    <td><span class="badge badge--bronze">18</span></td>
+                    <td>88</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      (function(){
+        if (!window.Chart) return;
+        const root = document.documentElement;
+        const ctxBar = document.getElementById('medalBarChart');
+        if (ctxBar){
+          new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+              labels: ['JPN', 'USA', 'CHN', 'GBR', 'ROC', 'FRA'],
+              datasets: [
+                { label: 'Or', data: [27,39,38,22,20,10], backgroundColor: getComputedStyle(root).getPropertyValue('--medal-gold').trim() },
+                { label: 'Argent', data: [14,41,32,21,28,12], backgroundColor: getComputedStyle(root).getPropertyValue('--medal-silver').trim() },
+                { label: 'Bronze', data: [17,33,18,22,23,11], backgroundColor: getComputedStyle(root).getPropertyValue('--medal-bronze').trim() }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { position: 'top' } },
+              scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true }
+              }
+            }
+          });
+        }
+
+        const ctxPie = document.getElementById('medalPieChart');
+        if (ctxPie){
+          new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+              labels: ['Or', 'Argent', 'Bronze'],
+              datasets: [{
+                data: [86, 98, 79],
+                backgroundColor: [
+                  getComputedStyle(root).getPropertyValue('--medal-gold').trim(),
+                  getComputedStyle(root).getPropertyValue('--medal-silver').trim(),
+                  getComputedStyle(root).getPropertyValue('--medal-bronze').trim(),
+                ],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: '65%',
+              plugins: { legend: { display: true, position: 'bottom' } }
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

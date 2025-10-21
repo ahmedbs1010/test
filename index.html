@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
 
-    <title>Dashboard Pro</title>
+    <title>Tokyo 2020 - Dashboard</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,10 +34,17 @@
               <path d="M7 13.5L10 16.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </span>
-          <span class="brand__name">ProBoard</span>
+          <span class="brand__name">Tokyo 2020</span>
+          <span class="brand__rings" aria-hidden="true">
+            <span class="ring" style="color: var(--ring-blue)"></span>
+            <span class="ring" style="color: var(--ring-yellow)"></span>
+            <span class="ring" style="color: var(--ring-black)"></span>
+            <span class="ring" style="color: var(--ring-green)"></span>
+            <span class="ring" style="color: var(--ring-red)"></span>
+          </span>
         </div>
         <nav class="sidebar__nav">
-          <a class="nav__item is-active" href="#">
+          <a class="nav__item is-active" href="index.html" data-nav="overview">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 3H10V10H3V3Z" stroke="currentColor" stroke-width="2"/>
@@ -46,47 +53,43 @@
                 <path d="M3 14H10V21H3V14Z" stroke="currentColor" stroke-width="2"/>
               </svg>
             </span>
-            <span class="label">Tableau de bord</span>
+            <span class="label">Aperçu</span>
           </a>
-          <a class="nav__item" href="#">
+          <a class="nav__item" href="coaches.html" data-nav="coaches">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 3V21" stroke="currentColor" stroke-width="2"/>
-                <path d="M7 13V21" stroke="currentColor" stroke-width="2"/>
-                <path d="M11 9V21" stroke="currentColor" stroke-width="2"/>
-                <path d="M15 5V21" stroke="currentColor" stroke-width="2"/>
-                <path d="M19 17V21" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 21C4 17.6863 6.68629 15 10 15H14C17.3137 15 20 17.6863 20 21" stroke="currentColor" stroke-width="2"/>
               </svg>
             </span>
-            <span class="label">Analytique</span>
+            <span class="label">Coaches</span>
           </a>
-          <a class="nav__item" href="#">
+          <a class="nav__item" href="athletes.html" data-nav="athletes">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 1V23" stroke="currentColor" stroke-width="2"/>
-                <path d="M4 8H20" stroke="currentColor" stroke-width="2"/>
-                <path d="M4 16H20" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="7" r="3" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 21L9 15L12 12L15 15L17 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <span class="label">Ventes</span>
+            <span class="label">Athlètes</span>
           </a>
-          <a class="nav__item" href="#">
+          <a class="nav__item" href="medailles.html" data-nav="medailles">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
-                <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20" stroke="currentColor" stroke-width="2"/>
+                <circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 2L10 6M16 2L14 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </span>
-            <span class="label">Clients</span>
+            <span class="label">Médailles</span>
           </a>
-          <a class="nav__item" href="#">
+          <a class="nav__item" href="historiques.html" data-nav="historiques">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" stroke="currentColor" stroke-width="2"/>
-                <path d="M19.4 15A1.65 1.65 0 0 0 21 13.35V10.65A1.65 1.65 0 0 0 19.4 9L18 8L16.5 5.6L15 5L13 4.6L12 3H12L11 4.6L9 5L7.5 5.6L6 8L4.6 9A1.65 1.65 0 0 0 3 10.65V13.35A1.65 1.65 0 0 0 4.6 15L6 16L7.5 18.4L9 19L11 19.4L12 21H12L13 19.4L15 19L16.5 18.4L18 16L19.4 15Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 8V12L15 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2"/>
               </svg>
             </span>
-            <span class="label">Paramètres</span>
+            <span class="label">Historiques</span>
           </a>
         </nav>
         <div class="sidebar__footer">
@@ -105,7 +108,7 @@
                 <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </button>
-            <h1 class="page-title">Tableau de bord</h1>
+            <h1 class="page-title">Aperçu</h1>
           </div>
           <div class="topbar__center">
             <div class="search">
@@ -158,38 +161,38 @@
           <div class="cards">
             <article class="card kpi">
               <div class="kpi__header">
-                <h3 class="kpi__title">Ventes totales</h3>
-                <span class="kpi__trend kpi__trend--up">+12.3%</span>
+                <h3 class="kpi__title">Total Médailles</h3>
+                <span class="kpi__trend kpi__trend--up">+5 aujourd'hui</span>
               </div>
-              <p class="kpi__value">€ 48 920</p>
-              <p class="kpi__meta">Mois en cours</p>
+              <p class="kpi__value">86</p>
+              <p class="kpi__meta">Tokyo 2020</p>
             </article>
 
             <article class="card kpi">
               <div class="kpi__header">
-                <h3 class="kpi__title">Utilisateurs actifs</h3>
-                <span class="kpi__trend kpi__trend--up">+4.1%</span>
+                <h3 class="kpi__title">Athlètes</h3>
+                <span class="kpi__trend kpi__trend--up">+12 inscrits</span>
               </div>
-              <p class="kpi__value">8 245</p>
-              <p class="kpi__meta">7 derniers jours</p>
+              <p class="kpi__value">356</p>
+              <p class="kpi__meta">Tous sports</p>
             </article>
 
             <article class="card kpi">
               <div class="kpi__header">
-                <h3 class="kpi__title">Taux de conversion</h3>
-                <span class="kpi__trend kpi__trend--down">-0.6%</span>
+                <h3 class="kpi__title">Disciplines</h3>
+                <span class="kpi__trend"> </span>
               </div>
-              <p class="kpi__value">3.24%</p>
-              <p class="kpi__meta">vs période précédente</p>
+              <p class="kpi__value">33</p>
+              <p class="kpi__meta">Olympiques</p>
             </article>
 
             <article class="card kpi">
               <div class="kpi__header">
-                <h3 class="kpi__title">Revenu</h3>
-                <span class="kpi__trend kpi__trend--up">+8.7%</span>
+                <h3 class="kpi__title">Pays</h3>
+                <span class="kpi__trend"> </span>
               </div>
-              <p class="kpi__value">€ 124 380</p>
-              <p class="kpi__meta">12 derniers mois</p>
+              <p class="kpi__value">52</p>
+              <p class="kpi__meta">Participants</p>
             </article>
           </div>
 
@@ -197,8 +200,8 @@
           <div class="grid-2">
             <article class="card chart-card">
               <div class="card__header">
-                <h3>Performance des revenus</h3>
-                <div class="chip">12 mois</div>
+                <h3>Tendance des médailles</h3>
+                <div class="chip">12 jours</div>
               </div>
               <div class="chart-container">
                 <canvas id="revenueChart" aria-label="Graphique des revenus" role="img"></canvas>
@@ -207,16 +210,16 @@
 
             <article class="card chart-card">
               <div class="card__header">
-                <h3>Sources de trafic</h3>
+                <h3>Répartition par type</h3>
                 <div class="chip chip--muted">Aujourd'hui</div>
               </div>
               <div class="chart-container chart-container--sm">
                 <canvas id="trafficChart" aria-label="Graphique des sources de trafic" role="img"></canvas>
               </div>
               <ul class="legend">
-                <li><span class="dot dot--primary"></span>Direct</li>
-                <li><span class="dot dot--success"></span>Référent</li>
-                <li><span class="dot dot--warning"></span>Social</li>
+                <li><span class="dot dot--primary"></span>Or</li>
+                <li><span class="dot dot--success"></span>Argent</li>
+                <li><span class="dot dot--warning"></span>Bronze</li>
               </ul>
             </article>
           </div>
@@ -224,91 +227,77 @@
           <!-- Table -->
           <article class="card">
             <div class="card__header">
-              <h3>Commandes récentes</h3>
+              <h3>Résultats récents</h3>
               <div class="filters">
                 <div class="field">
-                  <label for="statusFilter">Statut</label>
-                  <select id="statusFilter" class="select">
-                    <option value="all">Tous</option>
-                    <option value="payee">Payée</option>
-                    <option value="en-attente">En attente</option>
-                    <option value="remboursee">Remboursée</option>
+                  <label for="medalFilter">Médaille</label>
+                  <select id="medalFilter" class="select">
+                    <option value="all">Toutes</option>
+                    <option value="or">Or</option>
+                    <option value="argent">Argent</option>
+                    <option value="bronze">Bronze</option>
                   </select>
                 </div>
                 <div class="field field--grow">
-                  <label for="tableSearch">Recherche</label>
-                  <input id="tableSearch" type="text" class="input" placeholder="Rechercher une commande, un client..." />
+                  <label for="resultsSearch">Recherche</label>
+                  <input id="resultsSearch" type="text" class="input" placeholder="Rechercher une épreuve, un athlète, un pays..." />
                 </div>
               </div>
             </div>
 
             <div class="table-wrapper">
-              <table id="ordersTable" class="table">
+              <table id="resultsTable" class="table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Client</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
+                    <th>Épreuve</th>
+                    <th>Athlète</th>
+                    <th>Nation</th>
+                    <th>Médaille</th>
                     <th>Date</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr data-status="payee">
-                    <td>#1001</td>
-                    <td>Jean Dupont</td>
-                    <td>€ 120.00</td>
-                    <td><span class="badge badge--success">Payée</span></td>
-                    <td>2025-10-03</td>
-                  </tr>
-                  <tr data-status="en-attente">
-                    <td>#1002</td>
+                  <tr data-medal="or">
+                    <td>100m Femmes Finale</td>
                     <td>Marie Curie</td>
-                    <td>€ 89.90</td>
-                    <td><span class="badge badge--warning">En attente</span></td>
-                    <td>2025-10-05</td>
+                    <td>FRA</td>
+                    <td><span class="badge badge--gold">Or</span></td>
+                    <td>2021-07-31</td>
                   </tr>
-                  <tr data-status="remboursee">
-                    <td>#1003</td>
-                    <td>Ahmed Ben</td>
-                    <td>€ 45.50</td>
-                    <td><span class="badge badge--muted">Remboursée</span></td>
-                    <td>2025-10-07</td>
+                  <tr data-medal="argent">
+                    <td>Judo -73kg</td>
+                    <td>Kenji Sato</td>
+                    <td>JPN</td>
+                    <td><span class="badge badge--silver">Argent</span></td>
+                    <td>2021-07-28</td>
                   </tr>
-                  <tr data-status="payee">
-                    <td>#1004</td>
-                    <td>Lucie Martin</td>
-                    <td>€ 299.00</td>
-                    <td><span class="badge badge--success">Payée</span></td>
-                    <td>2025-10-08</td>
-                  </tr>
-                  <tr data-status="payee">
-                    <td>#1005</td>
-                    <td>Paul Simon</td>
-                    <td>€ 65.00</td>
-                    <td><span class="badge badge--success">Payée</span></td>
-                    <td>2025-10-10</td>
-                  </tr>
-                  <tr data-status="en-attente">
-                    <td>#1006</td>
-                    <td>Julie Vernes</td>
-                    <td>€ 150.25</td>
-                    <td><span class="badge badge--warning">En attente</span></td>
-                    <td>2025-10-12</td>
-                  </tr>
-                  <tr data-status="remboursee">
-                    <td>#1007</td>
-                    <td>Mario Rossi</td>
-                    <td>€ 210.00</td>
-                    <td><span class="badge badge--muted">Remboursée</span></td>
-                    <td>2025-10-14</td>
-                  </tr>
-                  <tr data-status="payee">
-                    <td>#1008</td>
+                  <tr data-medal="bronze">
+                    <td>Natation 200m Papillon</td>
                     <td>Laura Smith</td>
-                    <td>€ 430.00</td>
-                    <td><span class="badge badge--success">Payée</span></td>
-                    <td>2025-10-17</td>
+                    <td>GBR</td>
+                    <td><span class="badge badge--bronze">Bronze</span></td>
+                    <td>2021-08-02</td>
+                  </tr>
+                  <tr data-medal="or">
+                    <td>Basket 3x3</td>
+                    <td>Team USA</td>
+                    <td>USA</td>
+                    <td><span class="badge badge--gold">Or</span></td>
+                    <td>2021-08-05</td>
+                  </tr>
+                  <tr data-medal="argent">
+                    <td>Escrime Fleuret</td>
+                    <td>Jean Dupont</td>
+                    <td>FRA</td>
+                    <td><span class="badge badge--silver">Argent</span></td>
+                    <td>2021-07-26</td>
+                  </tr>
+                  <tr data-medal="bronze">
+                    <td>Haltérophilie -81kg</td>
+                    <td>Igor Petrov</td>
+                    <td>ROC</td>
+                    <td><span class="badge badge--bronze">Bronze</span></td>
+                    <td>2021-08-03</td>
                   </tr>
                 </tbody>
                 <tbody>

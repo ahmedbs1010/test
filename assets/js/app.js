@@ -61,12 +61,12 @@
       new window.Chart(revenueCtx, {
         type: 'line',
         data: {
-          labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jui', 'Jui', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+          labels: ['J1','J2','J3','J4','J5','J6','J7','J8','J9','J10','J11','J12'],
           datasets: [{
-            label: 'Revenus',
-            data: [12, 19, 13, 28, 32, 45, 42, 51, 49, 62, 58, 72],
+            label: 'Total Médailles',
+            data: [2, 5, 9, 14, 21, 28, 36, 45, 56, 68, 79, 86],
             borderColor: getComputedStyle(root).getPropertyValue('--primary').trim(),
-            backgroundColor: 'rgba(85,112,255,0.15)',
+            backgroundColor: 'color-mix(in oklab, var(--primary), transparent 85%)',
             fill: true,
             tension: 0.35,
             pointRadius: 2,
@@ -97,13 +97,13 @@
       new window.Chart(trafficCtx, {
         type: 'doughnut',
         data: {
-          labels: ['Direct', 'Référent', 'Social'],
+          labels: ['Or', 'Argent', 'Bronze'],
           datasets: [{
-            data: [55, 28, 17],
+            data: [32, 29, 25],
             backgroundColor: [
-              getComputedStyle(root).getPropertyValue('--primary').trim(),
-              getComputedStyle(root).getPropertyValue('--success').trim(),
-              getComputedStyle(root).getPropertyValue('--warning').trim(),
+              getComputedStyle(root).getPropertyValue('--medal-gold').trim(),
+              getComputedStyle(root).getPropertyValue('--medal-silver').trim(),
+              getComputedStyle(root).getPropertyValue('--medal-bronze').trim(),
             ],
             borderWidth: 0
           }]
@@ -127,9 +127,10 @@
   }
 
   // Table filter + search
-  const statusFilter = document.getElementById('statusFilter');
-  const tableSearch = document.getElementById('tableSearch');
-  const table = document.getElementById('ordersTable');
+  // Overview page results table (Olympic themed)
+  const statusFilter = document.getElementById('medalFilter');
+  const tableSearch = document.getElementById('resultsSearch');
+  const table = document.getElementById('resultsTable');
   const noResultsRow = document.getElementById('noResultsRow');
 
   function filterTable(){
@@ -139,7 +140,7 @@
     let visible = 0;
 
     table.querySelectorAll('tbody:first-of-type tr').forEach((row) => {
-      const rowStatus = row.getAttribute('data-status');
+      const rowStatus = row.getAttribute('data-medal');
       const text = row.textContent?.toLowerCase() || '';
       const matchesStatus = status === 'all' || status === rowStatus;
       const matchesQuery = !query || text.includes(query);
