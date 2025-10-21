@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <title>Dashboard Pro</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- Chart.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <!-- App Script -->
+    <script defer src="assets/js/app.js"></script>
+  </head>
+  <body>
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Barre latérale de navigation">
+        <div class="sidebar__brand">
+          <span class="brand__logo" aria-hidden="true">
+            <!-- Simple inline logo -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="6" fill="currentColor" opacity="0.12"/>
+              <path d="M7 13.5L10 16.5L17 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </span>
+          <span class="brand__name">ProBoard</span>
+        </div>
+        <nav class="sidebar__nav">
+          <a class="nav__item is-active" href="#">
+            <span class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3H10V10H3V3Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M14 3H21V10H14V3Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M14 14H21V21H14V14Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M3 14H10V21H3V14Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </span>
+            <span class="label">Tableau de bord</span>
+          </a>
+          <a class="nav__item" href="#">
+            <span class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3V21" stroke="currentColor" stroke-width="2"/>
+                <path d="M7 13V21" stroke="currentColor" stroke-width="2"/>
+                <path d="M11 9V21" stroke="currentColor" stroke-width="2"/>
+                <path d="M15 5V21" stroke="currentColor" stroke-width="2"/>
+                <path d="M19 17V21" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </span>
+            <span class="label">Analytique</span>
+          </a>
+          <a class="nav__item" href="#">
+            <span class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 1V23" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 8H20" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 16H20" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </span>
+            <span class="label">Ventes</span>
+          </a>
+          <a class="nav__item" href="#">
+            <span class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </span>
+            <span class="label">Clients</span>
+          </a>
+          <a class="nav__item" href="#">
+            <span class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 15.5C13.933 15.5 15.5 13.933 15.5 12C15.5 10.067 13.933 8.5 12 8.5C10.067 8.5 8.5 10.067 8.5 12C8.5 13.933 10.067 15.5 12 15.5Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M19.4 15A1.65 1.65 0 0 0 21 13.35V10.65A1.65 1.65 0 0 0 19.4 9L18 8L16.5 5.6L15 5L13 4.6L12 3H12L11 4.6L9 5L7.5 5.6L6 8L4.6 9A1.65 1.65 0 0 0 3 10.65V13.35A1.65 1.65 0 0 0 4.6 15L6 16L7.5 18.4L9 19L11 19.4L12 21H12L13 19.4L15 19L16.5 18.4L18 16L19.4 15Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </span>
+            <span class="label">Paramètres</span>
+          </a>
+        </nav>
+        <div class="sidebar__footer">
+          <small>v1.0.0</small>
+        </div>
+      </aside>
+      <div class="sidebar-backdrop" data-close-sidebar></div>
+
+      <!-- Main area -->
+      <main class="main">
+        <!-- Topbar -->
+        <header class="topbar">
+          <div class="topbar__left">
+            <button id="sidebarToggle" class="icon-btn" aria-label="Basculer le menu">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <h1 class="page-title">Tableau de bord</h1>
+          </div>
+          <div class="topbar__center">
+            <div class="search">
+              <svg class="search__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <input type="text" class="search__input" placeholder="Rechercher..." aria-label="Rechercher" />
+            </div>
+          </div>
+          <div class="topbar__right">
+            <button id="themeToggle" class="icon-btn" aria-label="Basculer le thème" aria-pressed="false">
+              <span class="theme-icon theme-icon--sun" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 2V4M12 20V22M4 12H2M22 12H20M5 5L3.5 3.5M20.5 20.5L19 19M5 19L3.5 20.5M20.5 3.5L19 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <span class="theme-icon theme-icon--moon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M21 12.79C20.24 13.06 19.43 13.2 18.6 13.2C14.28 13.2 10.8 9.72 10.8 5.4C10.8 4.57 10.94 3.76 11.21 3C7.62 4.27 5 7.86 5 12C5 16.97 9.03 21 14 21C18.14 21 21.73 18.38 23 14.79C22.23 15.06 21.42 15.2 20.6 15.2C20.06 15.2 19.54 15.14 19.04 15.03" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+
+            <button class="icon-btn" aria-label="Notifications">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M15 17H9M18 17H6L7 9C7 6.23858 9.23858 4 12 4V4C14.7614 4 17 6.23858 17 9L18 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M10 20C10.5 21 11.3333 21.5 12 21.5C12.6667 21.5 13.5 21 14 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <div class="user-menu">
+              <button id="userMenuButton" class="user-menu__btn" aria-haspopup="menu" aria-expanded="false">
+                <span class="avatar" aria-hidden="true">JD</span>
+              </button>
+              <div id="userMenu" class="dropdown" role="menu" aria-hidden="true">
+                <button class="dropdown__item" role="menuitem">Profil</button>
+                <button class="dropdown__item" role="menuitem">Paramètres</button>
+                <hr class="dropdown__divider" />
+                <button class="dropdown__item" role="menuitem">Déconnexion</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <section class="content">
+          <!-- KPI Cards -->
+          <div class="cards">
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Ventes totales</h3>
+                <span class="kpi__trend kpi__trend--up">+12.3%</span>
+              </div>
+              <p class="kpi__value">€ 48 920</p>
+              <p class="kpi__meta">Mois en cours</p>
+            </article>
+
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Utilisateurs actifs</h3>
+                <span class="kpi__trend kpi__trend--up">+4.1%</span>
+              </div>
+              <p class="kpi__value">8 245</p>
+              <p class="kpi__meta">7 derniers jours</p>
+            </article>
+
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Taux de conversion</h3>
+                <span class="kpi__trend kpi__trend--down">-0.6%</span>
+              </div>
+              <p class="kpi__value">3.24%</p>
+              <p class="kpi__meta">vs période précédente</p>
+            </article>
+
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Revenu</h3>
+                <span class="kpi__trend kpi__trend--up">+8.7%</span>
+              </div>
+              <p class="kpi__value">€ 124 380</p>
+              <p class="kpi__meta">12 derniers mois</p>
+            </article>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid-2">
+            <article class="card chart-card">
+              <div class="card__header">
+                <h3>Performance des revenus</h3>
+                <div class="chip">12 mois</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="revenueChart" aria-label="Graphique des revenus" role="img"></canvas>
+              </div>
+            </article>
+
+            <article class="card chart-card">
+              <div class="card__header">
+                <h3>Sources de trafic</h3>
+                <div class="chip chip--muted">Aujourd'hui</div>
+              </div>
+              <div class="chart-container chart-container--sm">
+                <canvas id="trafficChart" aria-label="Graphique des sources de trafic" role="img"></canvas>
+              </div>
+              <ul class="legend">
+                <li><span class="dot dot--primary"></span>Direct</li>
+                <li><span class="dot dot--success"></span>Référent</li>
+                <li><span class="dot dot--warning"></span>Social</li>
+              </ul>
+            </article>
+          </div>
+
+          <!-- Table -->
+          <article class="card">
+            <div class="card__header">
+              <h3>Commandes récentes</h3>
+              <div class="filters">
+                <div class="field">
+                  <label for="statusFilter">Statut</label>
+                  <select id="statusFilter" class="select">
+                    <option value="all">Tous</option>
+                    <option value="payee">Payée</option>
+                    <option value="en-attente">En attente</option>
+                    <option value="remboursee">Remboursée</option>
+                  </select>
+                </div>
+                <div class="field field--grow">
+                  <label for="tableSearch">Recherche</label>
+                  <input id="tableSearch" type="text" class="input" placeholder="Rechercher une commande, un client..." />
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper">
+              <table id="ordersTable" class="table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-status="payee">
+                    <td>#1001</td>
+                    <td>Jean Dupont</td>
+                    <td>€ 120.00</td>
+                    <td><span class="badge badge--success">Payée</span></td>
+                    <td>2025-10-03</td>
+                  </tr>
+                  <tr data-status="en-attente">
+                    <td>#1002</td>
+                    <td>Marie Curie</td>
+                    <td>€ 89.90</td>
+                    <td><span class="badge badge--warning">En attente</span></td>
+                    <td>2025-10-05</td>
+                  </tr>
+                  <tr data-status="remboursee">
+                    <td>#1003</td>
+                    <td>Ahmed Ben</td>
+                    <td>€ 45.50</td>
+                    <td><span class="badge badge--muted">Remboursée</span></td>
+                    <td>2025-10-07</td>
+                  </tr>
+                  <tr data-status="payee">
+                    <td>#1004</td>
+                    <td>Lucie Martin</td>
+                    <td>€ 299.00</td>
+                    <td><span class="badge badge--success">Payée</span></td>
+                    <td>2025-10-08</td>
+                  </tr>
+                  <tr data-status="payee">
+                    <td>#1005</td>
+                    <td>Paul Simon</td>
+                    <td>€ 65.00</td>
+                    <td><span class="badge badge--success">Payée</span></td>
+                    <td>2025-10-10</td>
+                  </tr>
+                  <tr data-status="en-attente">
+                    <td>#1006</td>
+                    <td>Julie Vernes</td>
+                    <td>€ 150.25</td>
+                    <td><span class="badge badge--warning">En attente</span></td>
+                    <td>2025-10-12</td>
+                  </tr>
+                  <tr data-status="remboursee">
+                    <td>#1007</td>
+                    <td>Mario Rossi</td>
+                    <td>€ 210.00</td>
+                    <td><span class="badge badge--muted">Remboursée</span></td>
+                    <td>2025-10-14</td>
+                  </tr>
+                  <tr data-status="payee">
+                    <td>#1008</td>
+                    <td>Laura Smith</td>
+                    <td>€ 430.00</td>
+                    <td><span class="badge badge--success">Payée</span></td>
+                    <td>2025-10-17</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr id="noResultsRow" class="table__empty" hidden>
+                    <td colspan="5">Aucun résultat</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
