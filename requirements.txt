@@ -1,0 +1,6 @@
+numpy>=1.24,<2
+pandas>=2.0
+scikit-learn>=1.2
+skl2onnx>=1.15.0
+onnx>=1.14
+onnxruntime>=1.16
