@@ -1,10 +1,26 @@
 :root{
+  /* Core surfaces */
   --bg: #0b1020;
   --panel: #0f162e;
   --panel-elev: #141c3a;
   --text: #e6e9f2;
   --muted: #9aa4bf;
-  --primary: #5570ff;
+
+  /* Tokyo 2020 brand & Olympic ring palette */
+  --tokyo-blue: #005bac; /* Primary brand blue */
+  --ring-blue: #0085c7;
+  --ring-yellow: #f4c300;
+  --ring-black: #1a1a1a;
+  --ring-green: #009f3d;
+  --ring-red: #df0024;
+
+  /* Medal colors */
+  --gold: #f2c200;
+  --silver: #b0b7c1;
+  --bronze: #cd7f32;
+
+  /* Semantic palette */
+  --primary: var(--tokyo-blue);
   --success: #2ecc71;
   --warning: #f1c40f;
   --danger: #e74c3c;
@@ -19,7 +35,7 @@ html[data-theme="light"]{
   --panel-elev: #fafbff;
   --text: #0b1220;
   --muted: #5b6b8d;
-  --primary: #3a57e8;
+  --primary: var(--tokyo-blue);
   --success: #22c55e;
   --warning: #eab308;
   --danger: #ef4444;
@@ -33,7 +49,7 @@ html, body{ height: 100% }
 
 body{
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  font-family: Inter, "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
   color: var(--text);
   background: radial-gradient(1200px 600px at 10% -10%, rgba(85,112,255,.08), transparent 40%),
               radial-gradient(800px 500px at 90% 10%, rgba(34,197,94,.08), transparent 40%),
@@ -129,6 +145,16 @@ body{
 .dot--primary{ background: var(--primary) }
 .dot--success{ background: var(--success) }
 .dot--warning{ background: var(--warning) }
+
+/* Olympic-specific utility dots */
+.dot--gold{ background: var(--gold) }
+.dot--silver{ background: var(--silver) }
+.dot--bronze{ background: var(--bronze) }
+.dot--ring-blue{ background: var(--ring-blue) }
+.dot--ring-yellow{ background: var(--ring-yellow) }
+.dot--ring-black{ background: var(--ring-black) }
+.dot--ring-green{ background: var(--ring-green) }
+.dot--ring-red{ background: var(--ring-red) }
 
 .table-wrapper{ overflow:auto; border:1px solid var(--border); border-radius:12px }
 .table{ width: 100%; border-collapse: collapse; min-width: 720px }
