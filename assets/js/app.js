@@ -56,16 +56,25 @@
   function initCharts(){
     if (!(window.Chart)) return;
 
-    const revenueCtx = document.getElementById('revenueChart');
-    if (revenueCtx){
-      new window.Chart(revenueCtx, {
+    const styles = getComputedStyle(root);
+    const primary = styles.getPropertyValue('--primary').trim();
+    const success = styles.getPropertyValue('--success').trim();
+    const warning = styles.getPropertyValue('--warning').trim();
+    const gold = styles.getPropertyValue('--gold').trim();
+    const silver = styles.getPropertyValue('--silver').trim();
+    const bronze = styles.getPropertyValue('--bronze').trim();
+
+    // Index: Médailles - tendance (line)
+    const medalsTrendCtx = document.getElementById('medalsTrendChart');
+    if (medalsTrendCtx){
+      new window.Chart(medalsTrendCtx, {
         type: 'line',
         data: {
-          labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jui', 'Jui', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'],
+          labels: ['Juil 23', 'Juil 24', 'Juil 25', 'Juil 26', 'Juil 27', 'Juil 28', 'Juil 29', 'Juil 30', 'Juil 31', 'Août 01', 'Août 02', 'Août 03'],
           datasets: [{
-            label: 'Revenus',
-            data: [12, 19, 13, 28, 32, 45, 42, 51, 49, 62, 58, 72],
-            borderColor: getComputedStyle(root).getPropertyValue('--primary').trim(),
+            label: 'Total médailles',
+            data: [2, 4, 7, 12, 18, 27, 35, 44, 57, 73, 92, 113],
+            borderColor: primary,
             backgroundColor: 'rgba(85,112,255,0.15)',
             fill: true,
             tension: 0.35,
@@ -80,31 +89,23 @@
             tooltip: { mode: 'index', intersect: false }
           },
           scales: {
-            x: {
-              grid: { display: false },
-            },
-            y: {
-              grid: { color: 'rgba(148,163,184,.15)' },
-              ticks: { stepSize: 10 }
-            }
+            x: { grid: { display: false } },
+            y: { grid: { color: 'rgba(148,163,184,.15)' } }
           }
         }
       });
     }
 
-    const trafficCtx = document.getElementById('trafficChart');
-    if (trafficCtx){
-      new window.Chart(trafficCtx, {
+    // Index: Part des médailles (doughnut)
+    const medalShareCtx = document.getElementById('medalShareChart');
+    if (medalShareCtx){
+      new window.Chart(medalShareCtx, {
         type: 'doughnut',
         data: {
-          labels: ['Direct', 'Référent', 'Social'],
+          labels: ['Or', 'Argent', 'Bronze'],
           datasets: [{
-            data: [55, 28, 17],
-            backgroundColor: [
-              getComputedStyle(root).getPropertyValue('--primary').trim(),
-              getComputedStyle(root).getPropertyValue('--success').trim(),
-              getComputedStyle(root).getPropertyValue('--warning').trim(),
-            ],
+            data: [38, 32, 43],
+            backgroundColor: [gold, silver, bronze],
             borderWidth: 0
           }]
         },
@@ -112,8 +113,112 @@
           responsive: true,
           maintainAspectRatio: false,
           cutout: '70%',
-          plugins: {
-            legend: { display: false }
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    // Athlètes: Répartition par sport (bar)
+    const athletesBySportCtx = document.getElementById('athletesBySportChart');
+    if (athletesBySportCtx){
+      new window.Chart(athletesBySportCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Athlétisme', 'Natation', 'Gym', 'Judo', 'Cyclisme', 'Aviron'],
+          datasets: [{
+            label: 'Athlètes',
+            data: [2100, 1200, 980, 540, 860, 430],
+            backgroundColor: primary,
+            borderWidth: 0,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: 'rgba(148,163,184,.15)' } }
+          }
+        }
+      });
+    }
+
+    // Athlètes: Top athlètes (horizontal bar)
+    const topAthletesCtx = document.getElementById('topAthletesChart');
+    if (topAthletesCtx){
+      new window.Chart(topAthletesCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Caeleb Dressel', 'Elaine Thompson', 'Katie Ledecky', 'Karsten Warholm', 'Teddy Riner'],
+          datasets: [{
+            label: 'Médailles',
+            data: [5, 3, 4, 2, 2],
+            backgroundColor: [gold, gold, silver, bronze, bronze],
+            borderWidth: 0,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(148,163,184,.15)' } },
+            y: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // Médailles: Chronologie (line)
+    const medalsTimelineCtx = document.getElementById('medalsTimelineChart');
+    if (medalsTimelineCtx){
+      new window.Chart(medalsTimelineCtx, {
+        type: 'line',
+        data: {
+          labels: ['Juil 23', 'Juil 25', 'Juil 27', 'Juil 29', 'Juil 31', 'Août 02'],
+          datasets: [{
+            label: 'Médailles cumulées',
+            data: [3, 11, 19, 31, 52, 75],
+            borderColor: primary,
+            backgroundColor: 'rgba(85,112,255,0.15)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(148,163,184,.15)' } } }
+        }
+      });
+    }
+
+    // Médailles: Par pays (stacked bar)
+    const medalsByCountryCtx = document.getElementById('medalsByCountryChart');
+    if (medalsByCountryCtx){
+      new window.Chart(medalsByCountryCtx, {
+        type: 'bar',
+        data: {
+          labels: ['USA', 'CHN', 'JPN', 'GBR', 'ROC'],
+          datasets: [
+            { label: 'Or', data: [39, 38, 27, 22, 20], backgroundColor: gold, borderWidth: 0, borderRadius: 6 },
+            { label: 'Argent', data: [41, 32, 14, 21, 28], backgroundColor: silver, borderWidth: 0, borderRadius: 6 },
+            { label: 'Bronze', data: [33, 18, 17, 22, 23], backgroundColor: bronze, borderWidth: 0, borderRadius: 6 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: {
+            x: { stacked: true, grid: { display: false } },
+            y: { stacked: true, grid: { color: 'rgba(148,163,184,.15)' } }
           }
         }
       });
@@ -129,7 +234,7 @@
   // Table filter + search
   const statusFilter = document.getElementById('statusFilter');
   const tableSearch = document.getElementById('tableSearch');
-  const table = document.getElementById('ordersTable');
+  const table = document.getElementById('resultsTable');
   const noResultsRow = document.getElementById('noResultsRow');
 
   function filterTable(){
@@ -152,5 +257,23 @@
 
   statusFilter?.addEventListener('change', filterTable);
   tableSearch?.addEventListener('input', filterTable);
+
+  // Coaches page: simple search on coachesTable
+  const coachSearch = document.getElementById('coachSearch');
+  const coachesTable = document.getElementById('coachesTable');
+  const noCoachResults = document.getElementById('noCoachResults');
+  function filterCoaches(){
+    if (!coachesTable) return;
+    const query = (coachSearch?.value || '').toLowerCase().trim();
+    let visible = 0;
+    coachesTable.querySelectorAll('tbody:first-of-type tr').forEach((row) => {
+      const text = row.textContent?.toLowerCase() || '';
+      const show = !query || text.includes(query);
+      row.toggleAttribute('hidden', !show);
+      if (show) visible++;
+    });
+    noCoachResults?.toggleAttribute('hidden', visible !== 0);
+  }
+  coachSearch?.addEventListener('input', filterCoaches);
 
 })();
