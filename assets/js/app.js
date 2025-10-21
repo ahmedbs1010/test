@@ -276,4 +276,225 @@
   }
   coachSearch?.addEventListener('input', filterCoaches);
 
+  // Predictions page logic (CSV -> features -> model/baseline -> charts/table)
+  async function readCSV(path){
+    const res = await fetch(path);
+    const text = await res.text();
+    return text.split(/\r?\n/).filter(Boolean).map((line) => line.split(/;|,/));
+  }
+
+  function sum(arr){ return arr.reduce((a,b)=> a + (Number(b)||0), 0); }
+
+  function groupByCountry(rows){
+    // Expect header: edition;edition_id;year;country;country_noc;gold;silver;bronze;total;Flag
+    const header = rows[0];
+    const idx = {
+      year: header.indexOf('year'),
+      country: header.indexOf('country'),
+      noc: header.indexOf('country_noc'),
+      gold: header.indexOf('gold'),
+      silver: header.indexOf('silver'),
+      bronze: header.indexOf('bronze'),
+      total: header.indexOf('total')
+    };
+    const data = {};
+    for (let i = 1; i < rows.length; i++){
+      const r = rows[i];
+      const country = r[idx.country];
+      const year = Number(r[idx.year]);
+      const gold = Number(r[idx.gold]||0);
+      const silver = Number(r[idx.silver]||0);
+      const bronze = Number(r[idx.bronze]||0);
+      const total = Number(r[idx.total]|| (gold+silver+bronze));
+      if (!country || !year) continue;
+      if (!data[country]) data[country] = [];
+      data[country].push({ year, gold, silver, bronze, total });
+    }
+    // sort by year asc
+    for (const c in data){ data[c].sort((a,b)=> a.year - b.year); }
+    return data;
+  }
+
+  function computeRecentFeatures(countryToYears, lastK=3){
+    const features = {};
+    for (const [country, arr] of Object.entries(countryToYears)){
+      const recent = arr.slice(-lastK);
+      const g = sum(recent.map(x=>x.gold));
+      const s = sum(recent.map(x=>x.silver));
+      const b = sum(recent.map(x=>x.bronze));
+      const t = sum(recent.map(x=>x.total));
+      // momentum: delta total between last and first
+      const momentum = recent.length >= 2 ? (recent[recent.length-1].total - recent[0].total) : 0;
+      features[country] = { gold: g, silver: s, bronze: b, total: t, momentum };
+    }
+    return features;
+  }
+
+  function baselinePredict(features){
+    // Simple linear weighting: w_total + small boost by momentum
+    const result = [];
+    const wTotal = 1.0, wMomentum = 0.4;
+    for (const [country, f] of Object.entries(features)){
+      const score = wTotal * f.total + wMomentum * Math.max(0, f.momentum);
+      // distribute by historical proportions
+      const denom = (f.gold + f.silver + f.bronze) || 1;
+      const pGold = f.gold / denom, pSilver = f.silver / denom, pBronze = f.bronze / denom;
+      const predictedTotal = Math.max(0, Math.round(score));
+      const predGold = Math.round(predictedTotal * pGold);
+      const predSilver = Math.round(predictedTotal * pSilver);
+      const predBronze = Math.max(0, predictedTotal - predGold - predSilver);
+      result.push({ country, gold: predGold, silver: predSilver, bronze: predBronze, total: predictedTotal });
+    }
+    result.sort((a,b)=> b.total - a.total);
+    return result;
+  }
+
+  async function runONNX(features, modelFile){
+    if (!(window.ort)) throw new Error('ONNX runtime indisponible');
+    // Build consistent feature order
+    const countries = Object.keys(features);
+    const X = countries.map((c)=>{
+      const f = features[c];
+      return [f.gold, f.silver, f.bronze, f.total, f.momentum];
+    });
+    const flattened = new Float32Array(X.flat());
+    const session = await window.ort.InferenceSession.create(modelFile);
+    const inputName = session.inputNames[0];
+    const dims = [countries.length, 5];
+    const feeds = {};
+    feeds[inputName] = new window.ort.Tensor('float32', flattened, dims);
+    const output = await session.run(feeds);
+    const firstOut = output[session.outputNames[0]].data;
+    // Assume model outputs total medal prediction per row; fallback if multi-column
+    const result = [];
+    const cols = firstOut.length / countries.length;
+    for (let i=0;i<countries.length;i++){
+      const total = Math.max(0, Math.round(cols === 1 ? firstOut[i] : firstOut[i*cols]));
+      const f = features[countries[i]];
+      const denom = (f.gold + f.silver + f.bronze) || 1;
+      const predGold = Math.round(total * (f.gold/denom));
+      const predSilver = Math.round(total * (f.silver/denom));
+      const predBronze = Math.max(0, total - predGold - predSilver);
+      result.push({ country: countries[i], gold: predGold, silver: predSilver, bronze: predBronze, total });
+    }
+    result.sort((a,b)=> b.total - a.total);
+    return result;
+  }
+
+  async function initPredictionsPage(){
+    const page = document.getElementById('predictionsPage');
+    if (!page) return; // not on predictions page
+
+    const styles = getComputedStyle(root);
+    const gold = styles.getPropertyValue('--gold').trim();
+    const silver = styles.getPropertyValue('--silver').trim();
+    const bronze = styles.getPropertyValue('--bronze').trim();
+
+    const modelInput = document.getElementById('modelFile');
+    const modelMeta = document.getElementById('modelMeta');
+    const runBaselineBtn = document.getElementById('runBaseline');
+    const predSearch = document.getElementById('predSearch');
+    const tbody = document.getElementById('predictionsBody');
+    const emptyRow = document.getElementById('noPredictionsRow');
+    const chartCanvas = document.getElementById('predictedByCountryChart');
+    const statCountries = document.getElementById('statCountries');
+    const statEditions = document.getElementById('statEditions');
+
+    let currentRows = [];
+    let chart;
+
+    function renderTable(rows){
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      const q = (predSearch?.value || '').toLowerCase().trim();
+      let visible = 0;
+      rows.forEach((r) => {
+        if (q && !r.country.toLowerCase().includes(q)) return;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.country}</td><td>${r.gold}</td><td>${r.silver}</td><td>${r.bronze}</td><td>${r.total}</td>`;
+        tbody.appendChild(tr);
+        visible++;
+      });
+      emptyRow?.toggleAttribute('hidden', visible !== 0);
+    }
+
+    function renderChart(rows){
+      if (!chartCanvas || !(window.Chart)) return;
+      const top = rows.slice(0, 10);
+      const labels = top.map(r=>r.country);
+      const dataGold = top.map(r=>r.gold);
+      const dataSilver = top.map(r=>r.silver);
+      const dataBronze = top.map(r=>r.bronze);
+      if (chart) chart.destroy();
+      chart = new window.Chart(chartCanvas, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            { label: 'Or', data: dataGold, backgroundColor: gold, borderWidth: 0, borderRadius: 6 },
+            { label: 'Argent', data: dataSilver, backgroundColor: silver, borderWidth: 0, borderRadius: 6 },
+            { label: 'Bronze', data: dataBronze, backgroundColor: bronze, borderWidth: 0, borderRadius: 6 },
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom' } },
+          scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true } }
+        }
+      });
+    }
+
+    async function loadData(){
+      const hist = await readCSV('historique.csv');
+      const grouped = groupByCountry(hist);
+      const editions = new Set();
+      for (const arr of Object.values(grouped)) arr.forEach(x=> editions.add(x.year));
+      const feats = computeRecentFeatures(grouped, 3);
+      statCountries && (statCountries.textContent = String(Object.keys(grouped).length));
+      statEditions && (statEditions.textContent = String(editions.size));
+      return feats;
+    }
+
+    function updateAll(rows){ currentRows = rows; renderTable(rows); renderChart(rows); }
+
+    predSearch?.addEventListener('input', ()=> renderTable(currentRows));
+
+    let loadedModelFile = null;
+    modelInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file){
+        loadedModelFile = file;
+        if (modelMeta) modelMeta.textContent = `${file.name} (${Math.round(file.size/1024)} Ko)`;
+      } else {
+        loadedModelFile = null;
+        if (modelMeta) modelMeta.textContent = 'Aucun modèle chargé.';
+      }
+    });
+
+    const features = await loadData();
+    // Default baseline on load for quick insight
+    updateAll(baselinePredict(features));
+
+    runBaselineBtn?.addEventListener('click', () => updateAll(baselinePredict(features)));
+
+    // If a model is provided, try inference when file selected
+    modelInput?.addEventListener('change', async () => {
+      if (!loadedModelFile) return;
+      try{
+        const rows = await runONNX(features, loadedModelFile);
+        updateAll(rows);
+      } catch(err){
+        console.warn('ONNX inference échouée, fallback baseline:', err);
+        updateAll(baselinePredict(features));
+      }
+    });
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initPredictionsPage);
+  } else {
+    initPredictionsPage();
+  }
+
 })();

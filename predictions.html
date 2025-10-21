@@ -6,7 +6,7 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
 
-    <title>Tokyo 2020 | Médailles</title>
+    <title>Tokyo 2020 | Prédictions 2028</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,11 +14,15 @@
 
     <link rel="stylesheet" href="assets/css/styles.css" />
 
+    <!-- Chart.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <!-- ONNX Runtime Web -->
+    <script defer src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
+
     <script defer src="assets/js/app.js"></script>
   </head>
   <body>
-    <div class="layout">
+    <div class="layout" id="predictionsPage">
       <aside class="sidebar" aria-label="Barre latérale de navigation">
         <div class="sidebar__brand">
           <span class="brand__logo" aria-hidden="true">
@@ -61,7 +65,7 @@
             </span>
             <span class="label">Performances</span>
           </a>
-          <a class="nav__item is-active" href="medals.html">
+          <a class="nav__item" href="medals.html">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
@@ -79,7 +83,7 @@
             </span>
             <span class="label">Historique</span>
           </a>
-          <a class="nav__item" href="predictions.html">
+          <a class="nav__item is-active" href="predictions.html">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 3C7.029 3 3 7.029 3 12C3 16.971 7.029 21 12 21C16.971 21 21 16.971 21 12C21 7.029 16.971 3 12 3Z" stroke="currentColor" stroke-width="2"/>
@@ -91,7 +95,7 @@
           </a>
         </nav>
         <div class="sidebar__footer">
-          <small>v1.0.0</small>
+          <small>v1.1.0</small>
         </div>
       </aside>
       <div class="sidebar-backdrop" data-close-sidebar></div>
@@ -104,7 +108,7 @@
                 <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </button>
-            <h1 class="page-title">Médailles</h1>
+            <h1 class="page-title">Prédictions 2028</h1>
           </div>
           <div class="topbar__center"></div>
           <div class="topbar__right">
@@ -125,73 +129,102 @@
         </header>
 
         <section class="content">
-          <div class="grid-2">
-            <article class="card chart-card">
-              <div class="card__header">
-                <h3>Chronologie des médailles</h3>
-                <div class="chip">Tokyo 2020</div>
+          <article class="card hero">
+            <div class="hero__body">
+              <div class="hero__left">
+                <h2 class="hero__title">Qui dominera Los Angeles 2028 ?</h2>
+                <p class="hero__subtitle">Téléversez un modèle <strong>ONNX</strong> pour prédire le tableau des médailles, ou utilisez notre <strong>baseline</strong> basée sur l’historique.</p>
+                <div class="hero__actions">
+                  <a class="btn" href="#upload">Téléverser un modèle</a>
+                  <button class="btn btn--ghost" id="runBaseline">Lancer la baseline</button>
+                </div>
               </div>
-              <div class="chart-container">
-                <canvas id="medalsTimelineChart" aria-label="Chronologie des médailles" role="img"></canvas>
+              <div class="hero__rings" aria-hidden="true">
+                <span class="ring ring--blue"></span>
+                <span class="ring ring--yellow"></span>
+                <span class="ring ring--black"></span>
+                <span class="ring ring--green"></span>
+                <span class="ring ring--red"></span>
+              </div>
+            </div>
+          </article>
+
+          <div class="grid-2" id="upload">
+            <article class="card">
+              <div class="card__header">
+                <h3>Modèle ONNX</h3>
+                <div class="chip">Optionnel</div>
+              </div>
+              <div class="upload" id="modelDrop">
+                <input id="modelFile" type="file" accept=".onnx" aria-label="Fichier modèle ONNX" />
+                <p class="upload__label"><strong>Glissez-déposez</strong> ou cliquez pour choisir un fichier <code>.onnx</code>.</p>
+                <p class="upload__meta" id="modelMeta">Aucun modèle chargé.</p>
+              </div>
+              <div class="note">
+                <p>Le modèle doit accepter une entrée tabulaire (float32) de forme <code>[N, F]</code>. Les features seront dérivées de <code>historique.csv</code> (médailles des éditions précédentes). Si le schéma ne correspond pas, la baseline sera utilisée.</p>
               </div>
             </article>
 
-            <article class="card chart-card">
+            <article class="card">
               <div class="card__header">
-                <h3>Médailles par pays</h3>
-                <div class="chip chip--muted">Top 5</div>
+                <h3>Données historiques</h3>
+                <div class="chip chip--muted">Intégrées</div>
               </div>
-              <div class="chart-container chart-container--sm">
-                <canvas id="medalsByCountryChart" aria-label="Médailles par pays" role="img"></canvas>
+              <div class="data-hint">
+                <p>Les données proviennent de <code>historique.csv</code> et <code>country.csv</code> du dépôt. Elles servent à calculer : 
+                <ul>
+                  <li>Totaux des 3 dernières éditions</li>
+                  <li>Répartition Or/Argent/Bronze</li>
+                  <li>Momentum (tendance)</li>
+                </ul>
+                </p>
               </div>
-              <ul class="legend">
-                <li><span class="dot dot--gold"></span>Or</li>
-                <li><span class="dot dot--silver"></span>Argent</li>
-                <li><span class="dot dot--bronze"></span>Bronze</li>
-              </ul>
+              <div class="stats">
+                <div class="stat"><span class="stat__label">Pays couverts</span><span class="stat__value" id="statCountries">—</span></div>
+                <div class="stat"><span class="stat__label">Éditions lues</span><span class="stat__value" id="statEditions">—</span></div>
+              </div>
             </article>
           </div>
 
+          <article class="card chart-card">
+            <div class="card__header">
+              <h3>Top 10 — Médailles prévues</h3>
+              <div class="chip">Los Angeles 2028</div>
+            </div>
+            <div class="chart-container">
+              <canvas id="predictedByCountryChart" aria-label="Prédictions de médailles" role="img"></canvas>
+            </div>
+          </article>
+
           <article class="card">
             <div class="card__header">
-              <h3>Classement</h3>
-              <div class="chip">Tableau final</div>
+              <h3>Tableau des prédictions</h3>
+              <div class="filters">
+                <div class="field field--grow">
+                  <label for="predSearch">Recherche</label>
+                  <input id="predSearch" type="text" class="input" placeholder="Pays..." />
+                </div>
+              </div>
             </div>
-            <ul class="leaderboard">
-              <li class="leaderboard__item">
-                <div class="leaderboard__left">
-                  <span class="flag" aria-hidden="true" style="background:linear-gradient(90deg,#b22234 50%, #3c3b6e 50%)"></span>
-                  <strong>États-Unis</strong>
-                </div>
-                <div class="medals">
-                  <span class="dot dot--gold"></span> 39
-                  <span class="dot dot--silver"></span> 41
-                  <span class="dot dot--bronze"></span> 33
-                </div>
-              </li>
-              <li class="leaderboard__item">
-                <div class="leaderboard__left">
-                  <span class="flag" aria-hidden="true" style="background:#de2910"></span>
-                  <strong>Chine</strong>
-                </div>
-                <div class="medals">
-                  <span class="dot dot--gold"></span> 38
-                  <span class="dot dot--silver"></span> 32
-                  <span class="dot dot--bronze"></span> 18
-                </div>
-              </li>
-              <li class="leaderboard__item">
-                <div class="leaderboard__left">
-                  <span class="flag" aria-hidden="true" style="background:#bc002d"></span>
-                  <strong>Japon</strong>
-                </div>
-                <div class="medals">
-                  <span class="dot dot--gold"></span> 27
-                  <span class="dot dot--silver"></span> 14
-                  <span class="dot dot--bronze"></span> 17
-                </div>
-              </li>
-            </ul>
+            <div class="table-wrapper">
+              <table id="predictionsTable" class="table">
+                <thead>
+                  <tr>
+                    <th>Pays</th>
+                    <th>Or</th>
+                    <th>Argent</th>
+                    <th>Bronze</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="predictionsBody"></tbody>
+                <tbody>
+                  <tr id="noPredictionsRow" class="table__empty" hidden>
+                    <td colspan="5">Aucune donnée</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </article>
         </section>
       </main>
