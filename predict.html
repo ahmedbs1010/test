@@ -5,17 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" content="#ffffff" />
-
-    <title>Tokyo 2020 | Médailles</title>
-
+    <title>Tokyo 2020 | Prédiction Médailles</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
-
     <link rel="stylesheet" href="assets/css/styles.css" />
-
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
     <script defer src="assets/js/app.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.0/dist/ort.min.js"></script>
+    <script defer src="assets/js/predict.js"></script>
   </head>
   <body>
     <div class="layout">
@@ -61,7 +59,7 @@
             </span>
             <span class="label">Performances</span>
           </a>
-          <a class="nav__item is-active" href="medals.html">
+          <a class="nav__item" href="medals.html">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
@@ -70,7 +68,7 @@
             </span>
             <span class="label">Médailles</span>
           </a>
-          <a class="nav__item" href="predict.html">
+          <a class="nav__item is-active" href="predict.html">
             <span class="icon" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4 12L10 18L20 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -102,7 +100,7 @@
                 <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
               </svg>
             </button>
-            <h1 class="page-title">Médailles</h1>
+            <h1 class="page-title">Prédiction de médaille</h1>
           </div>
           <div class="topbar__center"></div>
           <div class="topbar__right">
@@ -123,73 +121,52 @@
         </header>
 
         <section class="content">
-          <div class="grid-2">
-            <article class="card chart-card">
-              <div class="card__header">
-                <h3>Chronologie des médailles</h3>
-                <div class="chip">Tokyo 2020</div>
+          <article class="card">
+            <div class="card__header">
+              <h3>Paramètres d'entrée</h3>
+              <div class="chip">Démo</div>
+            </div>
+            <form id="predictForm" class="grid-3">
+              <div class="field">
+                <label for="age">Âge</label>
+                <input id="age" type="number" min="12" max="60" class="input" value="24" required />
               </div>
-              <div class="chart-container">
-                <canvas id="medalsTimelineChart" aria-label="Chronologie des médailles" role="img"></canvas>
+              <div class="field">
+                <label for="rank">Rang (1=or)</label>
+                <input id="rank" type="number" min="1" max="60" class="input" value="3" required />
               </div>
-            </article>
-
-            <article class="card chart-card">
-              <div class="card__header">
-                <h3>Médailles par pays</h3>
-                <div class="chip chip--muted">Top 5</div>
+              <div class="field">
+                <label for="gender">Genre</label>
+                <select id="gender" class="select">
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
               </div>
-              <div class="chart-container chart-container--sm">
-                <canvas id="medalsByCountryChart" aria-label="Médailles par pays" role="img"></canvas>
+              <div class="field">
+                <label for="noc">NOC (pays)</label>
+                <input id="noc" class="input" value="USA" />
               </div>
-              <ul class="legend">
-                <li><span class="dot dot--gold"></span>Or</li>
-                <li><span class="dot dot--silver"></span>Argent</li>
-                <li><span class="dot dot--bronze"></span>Bronze</li>
-              </ul>
-            </article>
-          </div>
+              <div class="field">
+                <label for="discipline">Discipline (abbr.)</label>
+                <input id="discipline" class="input" value="ATH" />
+              </div>
+              <div class="field">
+                <label for="sport">Sport</label>
+                <input id="sport" class="input" value="Athletics" />
+              </div>
+              <div class="field" style="grid-column: 1 / -1">
+                <button class="btn" type="submit">Prédire</button>
+                <span id="status" class="muted" style="margin-left: 12px"></span>
+              </div>
+            </form>
+          </article>
 
           <article class="card">
             <div class="card__header">
-              <h3>Classement</h3>
-              <div class="chip">Tableau final</div>
+              <h3>Résultat</h3>
+              <div class="chip chip--muted">ONNX Runtime</div>
             </div>
-            <ul class="leaderboard">
-              <li class="leaderboard__item">
-                <div class="leaderboard__left">
-                  <span class="flag" aria-hidden="true" style="background:linear-gradient(90deg,#b22234 50%, #3c3b6e 50%)"></span>
-                  <strong>États-Unis</strong>
-                </div>
-                <div class="medals">
-                  <span class="dot dot--gold"></span> 39
-                  <span class="dot dot--silver"></span> 41
-                  <span class="dot dot--bronze"></span> 33
-                </div>
-              </li>
-              <li class="leaderboard__item">
-                <div class="leaderboard__left">
-                  <span class="flag" aria-hidden="true" style="background:#de2910"></span>
-                  <strong>Chine</strong>
-                </div>
-                <div class="medals">
-                  <span class="dot dot--gold"></span> 38
-                  <span class="dot dot--silver"></span> 32
-                  <span class="dot dot--bronze"></span> 18
-                </div>
-              </li>
-              <li class="leaderboard__item">
-                <div class="leaderboard__left">
-                  <span class="flag" aria-hidden="true" style="background:#bc002d"></span>
-                  <strong>Japon</strong>
-                </div>
-                <div class="medals">
-                  <span class="dot dot--gold"></span> 27
-                  <span class="dot dot--silver"></span> 14
-                  <span class="dot dot--bronze"></span> 17
-                </div>
-              </li>
-            </ul>
+            <div id="result" class="result"></div>
           </article>
         </section>
       </main>

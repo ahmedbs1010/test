@@ -145,6 +145,59 @@
       });
     }
 
+    // Coaches: Répartition par sport (bar)
+    const coachesBySportCtx = document.getElementById('coachesBySportChart');
+    if (coachesBySportCtx){
+      new window.Chart(coachesBySportCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Athlétisme', 'Natation', 'Judo', 'Cyclisme', 'Gymnastique', 'Football'],
+          datasets: [{
+            label: 'Entraîneurs',
+            data: [6, 5, 4, 3, 5, 5],
+            backgroundColor: primary,
+            borderWidth: 0,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: 'rgba(148,163,184,.15)' } }
+          }
+        }
+      });
+    }
+
+    // Coaches: Ancienneté moyenne (line)
+    const coachExpCtx = document.getElementById('coachExperienceChart');
+    if (coachExpCtx){
+      new window.Chart(coachExpCtx, {
+        type: 'line',
+        data: {
+          labels: ['2016', '2017', '2018', '2019', '2020', '2021'],
+          datasets: [{
+            label: 'Années',
+            data: [5.2, 5.6, 5.9, 6.1, 6.4, 6.8],
+            borderColor: primary,
+            backgroundColor: 'rgba(85,112,255,0.15)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 2,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(148,163,184,.15)' } } }
+        }
+      });
+    }
+
     // Athlètes: Top athlètes (horizontal bar)
     const topAthletesCtx = document.getElementById('topAthletesChart');
     if (topAthletesCtx){
@@ -262,18 +315,29 @@
   const coachSearch = document.getElementById('coachSearch');
   const coachesTable = document.getElementById('coachesTable');
   const noCoachResults = document.getElementById('noCoachResults');
+  const coachSportFilter = document.getElementById('coachSportFilter');
+  const coachCountryFilter = document.getElementById('coachCountryFilter');
   function filterCoaches(){
     if (!coachesTable) return;
     const query = (coachSearch?.value || '').toLowerCase().trim();
+    const sport = coachSportFilter?.value || 'all';
+    const country = coachCountryFilter?.value || 'all';
     let visible = 0;
     coachesTable.querySelectorAll('tbody:first-of-type tr').forEach((row) => {
       const text = row.textContent?.toLowerCase() || '';
-      const show = !query || text.includes(query);
+      const rowSport = row.getAttribute('data-sport') || '';
+      const rowCountry = row.getAttribute('data-country') || '';
+      const matchesQuery = !query || text.includes(query);
+      const matchesSport = sport === 'all' || sport === rowSport;
+      const matchesCountry = country === 'all' || country === rowCountry;
+      const show = matchesQuery && matchesSport && matchesCountry;
       row.toggleAttribute('hidden', !show);
       if (show) visible++;
     });
     noCoachResults?.toggleAttribute('hidden', visible !== 0);
   }
   coachSearch?.addEventListener('input', filterCoaches);
+  coachSportFilter?.addEventListener('change', filterCoaches);
+  coachCountryFilter?.addEventListener('change', filterCoaches);
 
 })();
