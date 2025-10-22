@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="assets/css/styles.css" />
 
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.0/dist/ort.min.js"></script>
+    <script defer src="assets/js/predict.js"></script>
     <script defer src="assets/js/app.js"></script>
   </head>
   <body>
@@ -123,6 +125,45 @@
         </header>
 
         <section class="content">
+          <!-- KPIs -->
+          <div class="cards">
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Total entraîneurs</h3>
+                <span class="kpi__trend kpi__trend--up">+5%</span>
+              </div>
+              <p class="kpi__value">28</p>
+              <p class="kpi__meta">Délégation Tokyo 2020</p>
+            </article>
+
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Ancienneté moyenne</h3>
+                <span class="kpi__trend kpi__trend--up">+0.4</span>
+              </div>
+              <p class="kpi__value">6.8 ans</p>
+              <p class="kpi__meta">Depuis nomination</p>
+            </article>
+
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Sports couverts</h3>
+                <span class="kpi__trend kpi__trend--up">=</span>
+              </div>
+              <p class="kpi__value">10</p>
+              <p class="kpi__meta">Disciplines</p>
+            </article>
+
+            <article class="card kpi">
+              <div class="kpi__header">
+                <h3 class="kpi__title">Taux de podium</h3>
+                <span class="kpi__trend kpi__trend--up">+2.1%</span>
+              </div>
+              <p class="kpi__value">42%</p>
+              <p class="kpi__meta">Saisons récentes</p>
+            </article>
+          </div>
+
           <div class="cards">
             <article class="card">
               <div class="card__header">
@@ -154,13 +195,37 @@
               </div>
             </article>
 
-            <article class="card">
+            <article class="card" style="grid-column: 1 / -1">
               <div class="card__header">
                 <h3>Liste des entraîneurs</h3>
                 <div class="filters">
                   <div class="field field--grow">
                     <label for="coachSearch">Recherche</label>
                     <input id="coachSearch" type="text" class="input" placeholder="Nom, sport..." />
+                  </div>
+                  <div class="field">
+                    <label for="coachSportFilter">Sport</label>
+                    <select id="coachSportFilter" class="select">
+                      <option value="all">Tous</option>
+                      <option>Athlétisme</option>
+                      <option>Natation</option>
+                      <option>Judo</option>
+                      <option>Cyclisme</option>
+                      <option>Gymnastique</option>
+                      <option>Football</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="coachCountryFilter">Pays</label>
+                    <select id="coachCountryFilter" class="select">
+                      <option value="all">Tous</option>
+                      <option>États-Unis</option>
+                      <option>France</option>
+                      <option>Japon</option>
+                      <option>Canada</option>
+                      <option>Italie</option>
+                      <option>Royaume-Uni</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -175,23 +240,53 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr data-sport="Athlétisme" data-country="États-Unis">
                       <td>John Doe</td>
                       <td>Athlétisme</td>
                       <td>États-Unis</td>
                       <td>2018</td>
                     </tr>
-                    <tr>
+                    <tr data-sport="Natation" data-country="France">
                       <td>Marie Curie</td>
                       <td>Natation</td>
                       <td>France</td>
                       <td>2019</td>
                     </tr>
-                    <tr>
+                    <tr data-sport="Judo" data-country="Japon">
                       <td>Kazuo Tanaka</td>
                       <td>Judo</td>
                       <td>Japon</td>
                       <td>2015</td>
+                    </tr>
+                    <tr data-sport="Cyclisme" data-country="Italie">
+                      <td>Gianni Moretti</td>
+                      <td>Cyclisme</td>
+                      <td>Italie</td>
+                      <td>2017</td>
+                    </tr>
+                    <tr data-sport="Gymnastique" data-country="États-Unis">
+                      <td>Sophia Miller</td>
+                      <td>Gymnastique</td>
+                      <td>États-Unis</td>
+                      <td>2016</td>
+                    </tr>
+                    <tr data-sport="Football" data-country="France">
+                      <td>Antoine Lefèvre</td>
+                      <td>Football</td>
+                      <td>France</td>
+                      <td>2020</td>
+                    </tr>
+                    <tr data-sport="Athlétisme" data-country="Canada">
+                      <td>Amélie Tremblay</td>
+                      <td>Athlétisme</td>
+                      <td>Canada</td>
+                      <td>2014</td>
+                    </tr>
+                    <tr data-sport="Natation" data-country="Royaume-Uni">
+                      <td>Oliver Smith</td>
+                      <td>Natation</td>
+                      <td>Royaume-Uni</td>
+                      <td>2013</td>
                     </tr>
                   </tbody>
                   <tbody>
@@ -203,6 +298,71 @@
               </div>
             </article>
           </div>
+
+          <!-- Coaches charts -->
+          <div class="grid-2">
+            <article class="card chart-card">
+              <div class="card__header">
+                <h3>Entraîneurs par sport</h3>
+                <div class="chip">Répartition</div>
+              </div>
+              <div class="chart-container">
+                <canvas id="coachesBySportChart" aria-label="Entraîneurs par sport" role="img"></canvas>
+              </div>
+            </article>
+
+            <article class="card chart-card">
+              <div class="card__header">
+                <h3>Ancienneté moyenne</h3>
+                <div class="chip chip--muted">Années</div>
+              </div>
+              <div class="chart-container chart-container--sm">
+                <canvas id="coachExperienceChart" aria-label="Ancienneté moyenne" role="img"></canvas>
+              </div>
+            </article>
+          </div>
+
+          <!-- Embedded ONNX prediction -->
+          <article class="card">
+            <div class="card__header">
+              <h3>Prédiction de médaille (démo)</h3>
+              <div class="chip chip--muted">ONNX Runtime</div>
+            </div>
+            <form id="predictForm" class="grid-3">
+              <div class="field">
+                <label for="age">Âge</label>
+                <input id="age" type="number" min="12" max="60" class="input" value="24" required />
+              </div>
+              <div class="field">
+                <label for="rank">Rang (1=or)</label>
+                <input id="rank" type="number" min="1" max="60" class="input" value="3" required />
+              </div>
+              <div class="field">
+                <label for="gender">Genre</label>
+                <select id="gender" class="select">
+                  <option>Male</option>
+                  <option>Female</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="noc">NOC (pays)</label>
+                <input id="noc" class="input" value="USA" />
+              </div>
+              <div class="field">
+                <label for="discipline">Discipline (abbr.)</label>
+                <input id="discipline" class="input" value="ATH" />
+              </div>
+              <div class="field">
+                <label for="sport">Sport</label>
+                <input id="sport" class="input" value="Athletics" />
+              </div>
+              <div class="field" style="grid-column: 1 / -1">
+                <button class="btn" type="submit">Prédire</button>
+                <span id="status" class="muted" style="margin-left: 12px"></span>
+              </div>
+            </form>
+            <div id="result" class="result"></div>
+          </article>
         </section>
       </main>
     </div>
